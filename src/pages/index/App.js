@@ -15,6 +15,7 @@ class App extends Component {
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
+        <a href={'www.baidu.com'}>百度搜索</a>
       </div>
     );
   }

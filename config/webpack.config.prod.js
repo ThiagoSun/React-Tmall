@@ -12,6 +12,7 @@ const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
+const theme = require(paths.appPackageJson).theme;
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -152,7 +153,7 @@ module.exports = {
             loader: require.resolve('babel-loader'),
             options: {
               plugins: [
-                ['import', {libraryName: 'antd-mobile', style: "css"}],
+                ['import', {libraryName: 'antd-mobile', style: true}],
               ],
               compact: true,
             },
@@ -252,7 +253,7 @@ module.exports = {
                     {
                       loader: require.resolve('less-loader'),
                       options: {
-                        modifyVars: { "@primary-color": "#FF0036" },
+                        modifyVars: theme,
                       },
                     },
                   ],
@@ -260,6 +261,7 @@ module.exports = {
                 extractTextPluginOptions
               )
             ),
+            include: [paths.appSrc, paths.appNodeModules]
           },
           // "file" loader makes sure assets end up in the `build` folder.
           // When you `import` an asset, you get its filename.

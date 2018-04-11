@@ -104,5 +104,8 @@
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "theme": {
+    "brand-primary": "#108ee9"
   }
 }
