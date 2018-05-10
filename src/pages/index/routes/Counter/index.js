@@ -19,6 +19,6 @@ export default (store) => ({
       cb(null, Counter)
 
     /* Webpack named bundle   */
-    }, 'counter')
+    }, 'index/counter')
   }
 })
