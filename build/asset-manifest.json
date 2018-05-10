@@ -1,6 +1,7 @@
 {
-  "index.css": "static/pages/index/main.c9e66071.css",
-  "index.js": "static/pages/index/main.f56a43d4.js",
+  "counter.js": "static/pages/counter/main.468b8f9e.chunk.js",
+  "index.css": "static/pages/index/main.f48dc0ab.css",
+  "index.js": "static/pages/index/main.4228ab4a.js",
   "static\\media\\logo.svg": "static/media/logo.ee7cd8ed.svg",
-  "vendor.js": "static/pages/vendor.c18dfc67.js"
+  "vendor.js": "static/pages/vendor.1c4f6358.js"
 }
