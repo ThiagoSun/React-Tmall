@@ -10,9 +10,15 @@ export default function handleContentType(cb, ctx) {
   } else {
     switch (ctx.filter) {
       case preApi:
+        /**
+         * 暂无服务端时，使用Get方式请求json假数据
+         * @type {string}
+         */
+        ctx.options.method = 'GET';
         ctx.options.headers = {
           'Content-Type': 'application/x-www-form-urlencoded'
-        }
+        };
+        ctx.url = ctx.url + '.json';
         ctx.options.body = `Body=${encodeURIComponent(parseBody(ctx.options.body))}`
         break;
       default:

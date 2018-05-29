@@ -3,7 +3,6 @@ import composeMiddleWare from './composeMiddleWare';
 import apiConfig from './apiConfig';
 
 const env = process.env.NODE_ENV || 'development';
-console.log(apiConfig)
 
 export const preApi = apiConfig[env];
 
@@ -21,12 +20,6 @@ const filterErrorCodeArray = [-700];
 export const fetchAPI = (...args) => composeMiddleWare(fetchAction, preApi, ...args);
 
 function fetchAction({ filter, url, options }) {
-  /**
-   * 暂无服务端时，使用Get方式请求json假数据
-   * @type {string}
-   */
-  options.method = 'GET';
-
   let tempUrl = '';
   if (options.method !== 'GET') {
     tempUrl = options.method + url.split('?')[0];
@@ -36,9 +29,11 @@ function fetchAction({ filter, url, options }) {
     fetchUrl.push(tempUrl);
   }
   cacheError = '';
-  if (options.method === 'GET') delete options.body;
-  url += `&Timezone=${new Date().getTimezoneOffset()}`;
-  return fetch(`${filter}${url}.json`, options)
+  if (options.method === 'GET') {
+    url += `?${options.body}`;
+    delete options.body;
+  }
+  return fetch(filter + url, options)
     .then((response) => {
       if (options.method !== 'GET') {
         const i = fetchUrl.indexOf(tempUrl);
@@ -62,6 +57,7 @@ export const apiMiddleWare = store => next => (action) => {
         type: 'ERROR',
         error: cacheError
       });
+      env === 'development' && console.log('ERROR', cacheError);
     }
   } else {
     next({
@@ -127,38 +123,25 @@ export function parseBody(body) {
   return body;
 }
 
-export async function handleAPI(fn, action, dispatch) {
+export const handleAPI = async (fn, dispatch) => {
   try {
-    dispatch({
+    await dispatch({
       type: 'GLOBAL_LOADING',
       response: '1'
     });
-    return await fn.call(null, action).then(response => {
-      dispatch({
-        type: 'GLOBAL_LOADING',
-        response: '2'
-      });
-      return response;
-    });
+    env === 'development' && await console.log('GLOBAL_LOADING', '1');
+    return await fn.call();
   } catch (error) {
-    if (error.code === -700) {
-      dispatch({
-        type: 'TOKEN_INVALID'
-      });
-    } else {
-      dispatch({
-        type: 'ERROR',
-        error: cacheError
-      });
-    }
-    dispatch({
+    await dispatch({
       type: 'GLOBAL_LOADING',
       response: '1'
     });
-    dispatch({
+    env === 'development' && await console.log('GLOBAL_LOADING', '1');
+    await dispatch({
       type: 'ERROR',
       error,
     });
+    env === 'development' && await console.log('ERROR', error);
   }
 }
 

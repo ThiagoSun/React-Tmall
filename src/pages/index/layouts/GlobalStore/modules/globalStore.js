@@ -1,55 +1,56 @@
+import { handleAPI, fetchAPI } from '../../../../../lib/utils';
 // ------------------------------------
 // Constants
 // ------------------------------------
-export const COUNTER_INCREMENT = 'COUNTER_INCREMENT'
-export const COUNTER_DOUBLE_ASYNC = 'COUNTER_DOUBLE_ASYNC'
+export const GLOBAL_INIT = 'GLOBAL_INIT'
+export const GLOBAL_INIT_SUCCESS = 'GLOBAL_INIT_SUCCESS'
 
 // ------------------------------------
 // Actions
 // ------------------------------------
-export function increment (value = 1) {
-  return {
-    type    : COUNTER_INCREMENT,
-    payload : value
+export const getGlobalInitInfo = (params) => {
+  return (dispatch) => {
+    handleAPI(async () => {
+      await dispatch({
+        type: GLOBAL_INIT
+      });
+      const response = await getGlobalInitInfoAPI({
+        payload: {
+          param1: 'test-param'
+        }
+      });
+      await dispatch({
+        type: GLOBAL_INIT_SUCCESS,
+        appInfo: response.Result
+      });
+    }, dispatch);
   }
 }
 
-/*  This is a thunk, meaning it is a function that immediately
-    returns a function for lazy evaluation. It is incredibly useful for
-    creating async actions, especially when combined with redux-thunk! */
-
-export const doubleAsync = () => {
-  return (dispatch, getState) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        dispatch({
-          type    : COUNTER_DOUBLE_ASYNC,
-          payload : getState().counter
-        })
-        resolve()
-      }, 200)
-    })
-  }
-}
-
-export const actions = {
-  increment,
-  doubleAsync
+const getGlobalInitInfoAPI = async ({ payload }) => {
+  return await fetchAPI('api/test-haha', {
+    method: 'POST',
+    body: payload
+  });
 }
 
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [COUNTER_INCREMENT]    : (state, action) => state + action.payload,
-  [COUNTER_DOUBLE_ASYNC] : (state, action) => state * 2
+  [GLOBAL_INIT_SUCCESS] : (state, action) => {
+    return Object.assign({}, state, {
+      appInfo: action.appInfo
+    })
+  }
 }
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
 const initialState = {
-  appName: 'tmall'
+  appName: 'tmall',
+  appInfo: ''
 };
 export default function globalStoreReducer (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type]
