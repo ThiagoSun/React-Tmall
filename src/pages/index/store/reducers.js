@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux'
 import locationReducer from './location'
 import * as componentsReducer from './componentsReducer'
-console.log(componentsReducer)
 
 export const makeRootReducer = (asyncReducers) => {
   return combineReducers({

@@ -1,0 +1,42 @@
+{
+  "api": "mtop.taobao.baichuan.smb.get",
+  "data": {
+    "auto": {
+      "linkKey": "tmall",
+      "scheme": "tmall",
+      "smbSid": "eDxtEdgyF3oCAXrp5k63sBfz_1527351195328",
+      "type": 1
+    },
+    "blackUa": "AliApp\\(TB\\/|AliApp\\(JU\\/|AliApp\\(1688\\/|AliApp\\(moon\\/|AliApp\\(QN\\/|AliApp\\(HTAO\\/|TBIOS|AliApp\\(TB-PD|AliApp\\(TM\\/|AliApp\\(LT\\/|AliApp\\(cunpartner\\/",
+    "config": 6,
+    "extra": {
+      "fingerParam": "cfcd208495d565ef66e7dff9f98764da",
+      "rbbt": "bc.mallIndex.6"
+    },
+    "manual": {
+      "pop": {
+        "linkKey": "tmall",
+        "scheme": "tmall",
+        "smbSid": "eDxtEdgyF3oCAXrp5k63sBfz_1527351195329",
+        "type": 3,
+        "unlUrl": "//mobile.tmall.com/universal"
+      }
+    },
+    "themes": [
+      {
+        "defaultConfig": "{\"androidhref\":\"\",\"iphonehref\":\"\",\"subTitle\":\"\",\"bannerPic\":\"\",\"downloadUrl\":\"\",\"icon\":\"\",\"text\":\"\",\"title\":\"\",\"popImg\":\"//gw.alicdn.com/tfs/TB1rqEkdr9YBuNjy0FgXXcxcXXa-654-760.png\"}",
+        "editor": "史雷",
+        "freshConfig": "{\"androidhref\":\"\",\"iphonehref\":\"\",\"subTitle\":\"\",\"bannerPic\":\"\",\"downloadUrl\":\"\",\"icon\":\"\",\"text\":\"\",\"title\":\"\",\"popImg\":\"//gw.alicdn.com/tfs/TB1rqEkdr9YBuNjy0FgXXcxcXXa-654-760.png\"}",
+        "linkKey": "tmall",
+        "protocolType": 3,
+        "style": "{\"sbSubTitle\":\"\",\"sbPop\":\"\",\"sbTitle\":\"\",\"sbClose\":\"\",\"sbText\":\"\",\"sbRoot\":\"\",\"sbIcon\":\"\"}",
+        "type": "pop"
+      }
+    ],
+    "whiteUa": "^(((?!AliApp\\(TB)[\\s\\S])*)(?:AliApp\\(DingTalk|AliApp\\(XM|AliApp\\(|UCBrowser|Youku|MQQBrowser|amap)(((?!AliApp\\(TB)[\\s\\S])*)$"
+  },
+  "ret": [
+    "SUCCESS::调用成功"
+  ],
+  "v": "1.0"
+}
