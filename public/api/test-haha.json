@@ -35,5 +35,5 @@
       }
     ],
     "whiteUa": "^(((?!AliApp\\(TB)[\\s\\S])*)(?:AliApp\\(DingTalk|AliApp\\(XM|AliApp\\(|UCBrowser|Youku|MQQBrowser|amap)(((?!AliApp\\(TB)[\\s\\S])*)$"
-  },
+  }
 }

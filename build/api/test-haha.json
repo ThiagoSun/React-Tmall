@@ -1,6 +1,7 @@
 {
-  "api": "mtop.taobao.baichuan.smb.get",
-  "data": {
+  "Code": 0,
+  "Message": "SUCCESS",
+  "Result": {
     "auto": {
       "linkKey": "tmall",
       "scheme": "tmall",
@@ -34,9 +35,5 @@
       }
     ],
     "whiteUa": "^(((?!AliApp\\(TB)[\\s\\S])*)(?:AliApp\\(DingTalk|AliApp\\(XM|AliApp\\(|UCBrowser|Youku|MQQBrowser|amap)(((?!AliApp\\(TB)[\\s\\S])*)$"
-  },
-  "ret": [
-    "SUCCESS::调用成功"
-  ],
-  "v": "1.0"
+  }
 }
