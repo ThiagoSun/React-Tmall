@@ -14,6 +14,7 @@ export const getGlobalInitInfo = (params) => {
       await dispatch({
         type: GLOBAL_INIT
       });
+
       const response = await getGlobalInitInfoAPI({
         payload: {
           param1: 'test-param'
