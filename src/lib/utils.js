@@ -133,7 +133,7 @@ export const handleAPI = async (fn, dispatch) => {
       type: 'GLOBAL_LOADING',
       response: '1'
     });
-    env === 'development' && await console.log('GLOBAL_LOADING', '1');
+    env === 'development' && console.log('GLOBAL_LOADING', '1');
     Toast.loading('加载中...', 0, () => {}, true);
     return await fn.call();
   } catch (error) {
@@ -141,7 +141,7 @@ export const handleAPI = async (fn, dispatch) => {
       type: 'ERROR',
       error,
     });
-    env === 'development' && await console.log('ERROR', error);
+    env === 'development' && console.log('ERROR', error);
     Toast.fail(JSON.stringify(error), 3, () => {}, true);
   }
 }
