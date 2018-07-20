@@ -3,7 +3,7 @@ import thunk from 'redux-thunk'
 import { browserHistory } from 'react-router'
 import makeRootReducer from './reducers'
 import { updateLocation } from './location'
-import { apiMiddleWare } from '../../../lib/utils';
+import { apiMiddleWare } from 'lib/utils';
 
 const createStore = (initialState = {}) => {
   // ======================================================

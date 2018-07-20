@@ -1,5 +1,5 @@
 import React from 'react';
-import { shouldComponentUpdate } from '../../../../../lib/decorators';
+import { shouldComponentUpdate } from 'lib/decorators';
 import PropTypes from 'prop-types';
 
 @shouldComponentUpdate
