@@ -1,6 +1,7 @@
 import 'whatwg-fetch';
 import composeMiddleWare from './composeMiddleWare';
 import apiConfig from './apiConfig';
+import { Toast } from 'antd-mobile';
 
 const env = process.env.NODE_ENV || 'development';
 
@@ -52,18 +53,21 @@ export const apiMiddleWare = store => next => (action) => {
       next({
         type: 'TOKEN_INVALID'
       });
+      Toast.fail('Token失效', 3, () => {}, true);
     } else {
       next({
         type: 'ERROR',
         error: cacheError
       });
       env === 'development' && console.log('ERROR', cacheError);
+      Toast.fail(JSON.stringfy(cacheError), 3, () => {}, true);
     }
   } else {
     next({
       type: 'GLOBAL_LOADING',
       response: '2'
     });
+    Toast.hide();
   }
   next(action)
 };
@@ -129,19 +133,16 @@ export const handleAPI = async (fn, dispatch) => {
       type: 'GLOBAL_LOADING',
       response: '1'
     });
-    env === 'development' && await console.log('GLOBAL_LOADING', '1');
+    env === 'development' && console.log('GLOBAL_LOADING', '1');
+    Toast.loading('加载中...', 0, () => {}, true);
     return await fn.call();
   } catch (error) {
-    await dispatch({
-      type: 'GLOBAL_LOADING',
-      response: '1'
-    });
-    env === 'development' && await console.log('GLOBAL_LOADING', '1');
     await dispatch({
       type: 'ERROR',
       error,
     });
-    env === 'development' && await console.log('ERROR', error);
+    env === 'development' && console.log('ERROR', error);
+    Toast.fail(JSON.stringify(error), 3, () => {}, true);
   }
 }
 

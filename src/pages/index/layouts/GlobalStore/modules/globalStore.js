@@ -14,9 +14,10 @@ export const getGlobalInitInfo = (params) => {
       await dispatch({
         type: GLOBAL_INIT
       });
+
       const response = await getGlobalInitInfoAPI({
         payload: {
-          param1: 'test-param'
+          date: new Date().getTime()
         }
       });
       await dispatch({
@@ -28,8 +29,8 @@ export const getGlobalInitInfo = (params) => {
 }
 
 const getGlobalInitInfoAPI = async ({ payload }) => {
-  return await fetchAPI('api/test-haha', {
-    method: 'POST',
+  return await fetchAPI('api/global/version', {
+    method: 'GET',
     body: payload
   });
 }
