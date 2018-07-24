@@ -1,4 +1,4 @@
-import { handleAPI, fetchAPI } from '../../../../../lib/utils';
+import { handleAPI, fetchAPI } from 'lib/utils';
 // ------------------------------------
 // Constants
 // ------------------------------------
