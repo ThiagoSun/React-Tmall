@@ -17,6 +17,34 @@ let render = () => {
     MOUNT_NODE
   )
 };
+// Development Tools
+// ------------------------------------
+if (process.env.NODE_ENV === 'development') {
+  if (module.hot) {
+    const renderApp = render
 
-render();
+    render = () => {
+      try {
+        renderApp()
+      } catch (e) {
+        console.error(e)
+      }
+    }
+
+    // Setup hot module replacement
+    module.hot.accept([
+        './routes/index',
+      ], () =>
+        setImmediate(() => {
+          ReactDOM.unmountComponentAtNode(MOUNT_NODE)
+          render()
+        })
+    )
+  }
+}
+
+// Let's Go!
+// ------------------------------------
+if (process.env.NODE_ENV !== 'test') render()
+
 registerServiceWorker();
