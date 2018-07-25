@@ -59,7 +59,8 @@ module.exports = {
       // We include the app code last so that if there is a runtime error during
       // initialization, it doesn't blow up the WebpackDevServer client, and
       // changing JS code would still trigger a refresh.
-    ]
+    ],
+    vendor: ['react', 'react-dom', 'redux', 'react-redux', 'redux-thunk', 'prop-types']
   },
   output: {
     // Next line is not used in dev but WebpackDevServer crashes without it:
