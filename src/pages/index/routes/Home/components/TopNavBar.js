@@ -3,6 +3,8 @@ import { shouldComponentUpdate } from 'lib/decorators';
 import { Drawer, List, NavBar, Icon } from 'antd-mobile';
 import './TopNavBar.less';
 
+const Fragment = React.Fragment;
+
 @shouldComponentUpdate
 export default class TopNavBar extends React.Component {
   constructor(props) {
@@ -20,7 +22,7 @@ export default class TopNavBar extends React.Component {
   };
 
   onOpenChange = () => {
-    this.setState({ drawerOpen: !this.state.drawerOpen });
+   this.setState({ drawerOpen: !this.state.drawerOpen });
   }
 
   renderSideBar = () => {
@@ -39,22 +41,24 @@ export default class TopNavBar extends React.Component {
   }
 
   render() {
-    return (<div>
-      <NavBar icon={<Icon type="ellipsis" />} onLeftClick={this.onOpenChange} className='top-navbar'>
-        <img
-          src={'//gw.alicdn.com/tfs/TB1wQw8qamWBuNjy1XaXXXCbXXa-237-41.png_240x10000.jpg_.webp'}
-          alt={'天猫Tmall'} style={{ height: '0.4rem' }}
-        />
-      </NavBar>
-      <Drawer
-        className="my-drawer"
-        style={{ minHeight: document.documentElement.clientHeight }}
-        // enableDragHandle
-        sidebar={this.renderSideBar()}
-        open={this.state.drawerOpen}
-        onOpenChange={this.onOpenChange}
-      >{''}
-      </Drawer>
-    </div>);
+    return (
+      <Fragment>
+        <NavBar icon={<Icon type="ellipsis" />} onLeftClick={this.onOpenChange} className='top-navbar'>
+          <img
+            src={'//gw.alicdn.com/tfs/TB1wQw8qamWBuNjy1XaXXXCbXXa-237-41.png_240x10000.jpg_.webp'}
+            alt={'天猫Tmall'} style={{ height: '0.4rem' }}
+          />
+        </NavBar>
+        <Drawer
+          className="my-drawer"
+          style={{ minHeight: document.documentElement.clientHeight }}
+          // enableDragHandle
+          sidebar={this.renderSideBar()}
+          open={this.state.drawerOpen}
+          onOpenChange={this.onOpenChange}
+        >{''}
+        </Drawer>
+      </Fragment>
+    );
   }
 }
