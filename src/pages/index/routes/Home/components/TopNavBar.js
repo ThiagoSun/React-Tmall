@@ -26,7 +26,7 @@ export default class TopNavBar extends React.Component {
   }
 
   renderSideBar = () => {
-    return (<List style={{ marginBottom: '1rem' }}>
+    return (<List className='top-navbar-list'>
       {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map((i, index) => {
         if (index === 0) {
           return (<List.Item
@@ -46,7 +46,7 @@ export default class TopNavBar extends React.Component {
         <NavBar icon={<Icon type="ellipsis" />} onLeftClick={this.onOpenChange} className='top-navbar'>
           <img
             src={'//gw.alicdn.com/tfs/TB1wQw8qamWBuNjy1XaXXXCbXXa-237-41.png_240x10000.jpg_.webp'}
-            alt={'天猫Tmall'} style={{ height: '0.4rem' }}
+            alt={'天猫Tmall'} className='tmall-img'
           />
         </NavBar>
         <Drawer

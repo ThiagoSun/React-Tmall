@@ -51,6 +51,7 @@
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.8",
+    "postcss-pxtorem": "^4.0.1",
     "promise": "^8.0.1",
     "raf": "3.4.0",
     "react-dev-utils": "^5.0.0",
@@ -114,7 +115,7 @@
     "extends": "react-app"
   },
   "theme": {
-    "hd": "1px",
+    "hd": "2px",
     "brand-primary": "#108ee9",
     "font-size-base": "12 * @hd"
   }

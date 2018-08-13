@@ -13,6 +13,7 @@ const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
 const theme = require(paths.appPackageJson).theme;
+const pxtorem = require('postcss-pxtorem');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -208,6 +209,11 @@ module.exports = {
                             ],
                             flexbox: 'no-2009',
                           }),
+                          pxtorem({
+                            rootValue: 100,
+                            // propList: ['*', '!font*', '!line-height', '!letter-spacing']
+                            propList: ['*']   // 暂时开放字体的rem转换
+                          })
                         ],
                       },
                     },
@@ -248,6 +254,11 @@ module.exports = {
                             ],
                             flexbox: 'no-2009',
                           }),
+                          pxtorem({
+                            rootValue: 100,
+                            // propList: ['*', '!font*', '!line-height', '!letter-spacing']
+                            propList: ['*']   // 暂时开放字体的rem转换
+                          })
                         ],
                       },
                     },
