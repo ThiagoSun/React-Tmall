@@ -60,7 +60,8 @@ module.exports = {
   // In production, we only want to load the polyfills and the app code.
   entry: {
     index: [require.resolve('./polyfills'), paths.appSrc + '/pages/index/index.js'],
-    vendor: ['react', 'react-dom', 'redux', 'react-redux', 'redux-thunk', 'prop-types']
+    vendor: ['react', 'react-dom', 'redux', 'react-redux', 'redux-thunk', 'prop-types',
+      'react-addons-css-transition-group', 'react-lazyload']
   },
   output: {
     // The build folder.
