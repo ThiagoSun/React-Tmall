@@ -1,6 +1,7 @@
 {
   "index.css": "static/pages/index/main.4d0d505f.css",
-  "index.js": "static/pages/index/main.f60cd887.js",
-  "index/counter.js": "static/pages/index/counter.fbca2fd5.chunk.js",
-  "vendor.js": "static/pages/vendor.3e85da84.js"
+  "index.js": "static/pages/index/main.3daf6a17.js",
+  "index/counter.js": "static/pages/index/counter.b88175f5.chunk.js",
+  "runtime.js": "static/pages/runtime.e943590b.js",
+  "vendor.js": "static/pages/vendor.3167768d.js"
 }
