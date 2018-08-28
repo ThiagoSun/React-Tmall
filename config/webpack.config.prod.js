@@ -334,7 +334,7 @@ module.exports = {
     // }),
     new HtmlWebpackPlugin({
       inject: true,
-      chunks: ['vendor', 'index'],
+      chunks: ['runtime', 'vendor', 'index'],
       minify: {
         removeComments: true,
         collapseWhitespace: true,
