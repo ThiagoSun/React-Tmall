@@ -305,10 +305,15 @@ module.exports = {
     // In production, it will be an empty string unless you specify "homepage"
     // in `package.json`, in which case it will be the pathname of that URL.
     new InterpolateHtmlPlugin(env.raw),
+    new webpack.HashedModuleIdsPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       filename: 'static/pages/[name].[chunkhash:8].js',
       minChunks: 4
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'runtime',
+      filename: 'static/pages/[name].[chunkhash:8].js'
     }),
     // Generates an `index.html` file with the <script> injected.
     // new HtmlWebpackPlugin({
