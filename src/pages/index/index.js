@@ -21,15 +21,16 @@ let render = () => {
 // ------------------------------------
 if (process.env.NODE_ENV === 'development') {
   if (module.hot) {
-    const renderApp = render
-
-    render = () => {
-      try {
-        renderApp()
-      } catch (e) {
-        console.error(e)
-      }
-    }
+    render();
+    // const renderApp = render
+    //
+    // render = () => {
+    //   try {
+    //     renderApp()
+    //   } catch (e) {
+    //     console.error(e)
+    //   }
+    // }
 
     // Setup hot module replacement
     module.hot.accept([

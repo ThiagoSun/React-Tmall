@@ -13,6 +13,7 @@ const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
 const theme = require(paths.appPackageJson).theme;
+const pxtorem = require('postcss-pxtorem');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -59,6 +60,8 @@ module.exports = {
   // In production, we only want to load the polyfills and the app code.
   entry: {
     index: [require.resolve('./polyfills'), paths.appSrc + '/pages/index/index.js'],
+    vendor: ['react', 'react-dom', 'redux', 'react-redux', 'redux-thunk', 'prop-types',
+      'react-addons-css-transition-group', 'react-lazyload']
   },
   output: {
     // The build folder.
@@ -207,6 +210,11 @@ module.exports = {
                             ],
                             flexbox: 'no-2009',
                           }),
+                          pxtorem({
+                            rootValue: 100,
+                            // propList: ['*', '!font*', '!line-height', '!letter-spacing']
+                            propList: ['*']   // 暂时开放字体的rem转换
+                          })
                         ],
                       },
                     },
@@ -247,6 +255,11 @@ module.exports = {
                             ],
                             flexbox: 'no-2009',
                           }),
+                          pxtorem({
+                            rootValue: 100,
+                            // propList: ['*', '!font*', '!line-height', '!letter-spacing']
+                            propList: ['*']   // 暂时开放字体的rem转换
+                          })
                         ],
                       },
                     },
@@ -292,10 +305,16 @@ module.exports = {
     // In production, it will be an empty string unless you specify "homepage"
     // in `package.json`, in which case it will be the pathname of that URL.
     new InterpolateHtmlPlugin(env.raw),
+    // 打包时增加一个runtime包，保存文件之间的对应关系，避免修改业务代码时造成vendor.js的hash变化
+    new webpack.HashedModuleIdsPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       filename: 'static/pages/[name].[chunkhash:8].js',
       minChunks: 4
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'runtime',
+      filename: 'static/pages/[name].[chunkhash:8].js'
     }),
     // Generates an `index.html` file with the <script> injected.
     // new HtmlWebpackPlugin({
@@ -316,7 +335,7 @@ module.exports = {
     // }),
     new HtmlWebpackPlugin({
       inject: true,
-      chunks: ['vendor', 'index'],
+      chunks: ['runtime', 'vendor', 'index'],
       minify: {
         removeComments: true,
         collapseWhitespace: true,

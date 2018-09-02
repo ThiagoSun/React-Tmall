@@ -1,6 +1,7 @@
 {
-  "index.css": "static/pages/index/main.892c44f2.css",
-  "index.js": "static/pages/index/main.858f4a72.js",
-  "index/counter.js": "static/pages/index/counter.68623f14.chunk.js",
-  "vendor.js": "static/pages/vendor.de0db8cf.js"
+  "index.css": "static/pages/index/main.4d0d505f.css",
+  "index.js": "static/pages/index/main.32507eb3.js",
+  "index/counter.js": "static/pages/index/counter.b88175f5.chunk.js",
+  "runtime.js": "static/pages/runtime.1e89ae02.js",
+  "vendor.js": "static/pages/vendor.3167768d.js"
 }

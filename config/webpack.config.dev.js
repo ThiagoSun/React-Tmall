@@ -12,6 +12,7 @@ const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
 const theme = require(paths.appPackageJson).theme;
+const pxtorem = require('postcss-pxtorem');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -59,7 +60,9 @@ module.exports = {
       // We include the app code last so that if there is a runtime error during
       // initialization, it doesn't blow up the WebpackDevServer client, and
       // changing JS code would still trigger a refresh.
-    ]
+    ],
+    vendor: ['react', 'react-dom', 'redux', 'react-redux', 'redux-thunk', 'prop-types',
+      'react-addons-css-transition-group', 'react-lazyload']
   },
   output: {
     // Next line is not used in dev but WebpackDevServer crashes without it:
@@ -196,6 +199,11 @@ module.exports = {
                       ],
                       flexbox: 'no-2009',
                     }),
+                    pxtorem({
+                      rootValue: 100,
+                      // propList: ['*', '!font*', '!line-height', '!letter-spacing']
+                      propList: ['*']   // 暂时开放字体的rem转换
+                    })
                   ],
                 },
               },
@@ -221,6 +229,11 @@ module.exports = {
                       ],
                       flexbox: 'no-2009',
                     }),
+                    pxtorem({
+                      rootValue: 100,
+                      // propList: ['*', '!font*', '!line-height', '!letter-spacing']
+                      propList: ['*']   // 暂时开放字体的rem转换
+                    })
                   ],
                 },
               },
