@@ -30,7 +30,7 @@ function fetchAction({ filter, url, options }) {
     fetchUrl.push(tempUrl);
   }
   cacheError = '';
-  if (options.method === 'GET') {
+  if (options.method === 'GET' && options.body) {
     url += `?${options.body}`;
     delete options.body;
   }

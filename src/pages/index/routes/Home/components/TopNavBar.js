@@ -1,6 +1,6 @@
 import React from 'react';
 import {shouldComponentUpdate} from 'lib/decorators';
-import {Drawer, List, NavBar, Icon} from 'antd-mobile';
+import {Drawer, NavBar, Icon} from 'antd-mobile';
 import PropTypes from 'prop-types';
 import './TopNavBar.less';
 
@@ -11,13 +11,15 @@ export default class TopNavBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      drawerOpen: false
+      drawerOpen: false,
+      firstClassIndex: 0
     };
   }
 
   static propTypes = {
     topNavBar: PropTypes.object,
-    getCategoryData: PropTypes.func
+    getCategoryData: PropTypes.func,
+    onToggleCallback: PropTypes.func
   };
 
   static defaultProps = {};
@@ -28,21 +30,37 @@ export default class TopNavBar extends React.Component {
 
   onOpenChange = () => {
     this.setState({drawerOpen: !this.state.drawerOpen});
+    if (Object.prototype.toString.call(this.props.onToggleCallback === "[object Function]")){
+      this.props.onToggleCallback();
+    }
   }
 
   renderSideBar = () => {
-    return (<List className='top-navbar-list'>
-      {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].map((i, index) => {
-        if (index === 0) {
-          return (<List.Item
-            key={index} thumb="https://zos.alipayobjects.com/rmsportal/eOZidTabPoEbPeU.png" multipleLine
-          >Category</List.Item>);
-        }
-        return (<List.Item
-          key={index} thumb="https://zos.alipayobjects.com/rmsportal/eOZidTabPoEbPeU.png"
-        >Category{index}</List.Item>);
-      })}
-    </List>);
+    return (<Fragment>
+      <div className='category-title'><h3>全部分类</h3></div>
+      <div className='category-container'>
+        <ul className='left-ul'>
+          {this.props.topNavBar.category.map((item, index) => {
+            return (
+              <li
+                className={this.state.firstClassIndex === index ? 'item-active' : 'item-closed'}
+                key={`first-class-${item.id}`}
+                onClick={this.handleFirstClassClick(index)}
+              >{item.name}</li>
+            )
+          })}
+        </ul>
+        <div className='right-div'>
+
+        </div>
+      </div>
+    </Fragment>);
+  }
+
+  handleFirstClassClick = (index) => () => {
+    this.setState({
+      firstClassIndex: index
+    })
   }
 
   render() {
@@ -54,15 +72,17 @@ export default class TopNavBar extends React.Component {
             alt={'天猫Tmall'} className='tmall-img'
           />
         </NavBar>
-        <Drawer
-          className="my-drawer"
-          style={{minHeight: document.documentElement.clientHeight}}
-          // enableDragHandle
-          sidebar={this.renderSideBar()}
-          open={this.state.drawerOpen}
-          onOpenChange={this.onOpenChange}
-        >{''}
-        </Drawer>
+        <div className='drawer-container'>
+          <Drawer
+            className="my-drawer"
+            style={{minHeight: document.documentElement.clientHeight}}
+            // enableDragHandle
+            sidebar={this.renderSideBar()}
+            open={this.state.drawerOpen}
+            onOpenChange={this.onOpenChange}
+          >{''}
+          </Drawer>
+        </div>
       </Fragment>
     );
   }

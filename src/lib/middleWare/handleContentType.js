@@ -19,13 +19,17 @@ export default function handleContentType(cb, ctx) {
           'Content-Type': 'application/x-www-form-urlencoded'
         };
         ctx.url = ctx.url + '.json';
-        ctx.options.body = `Body=${encodeURIComponent(parseBody(ctx.options.body))}`
+        if (ctx.options.body) {
+          ctx.options.body = `Body=${encodeURIComponent(parseBody(ctx.options.body))}`;
+        }
         break;
       default:
         ctx.options.headers = {
           'Content-Type': 'application/x-www-form-urlencoded'
+        };
+        if (ctx.options.body) {
+          ctx.options.body = `Body=${encodeURIComponent(parseBody(ctx.options.body))}`;
         }
-        ctx.options.body = `Body=${encodeURIComponent(parseBody(ctx.options.body))}`
         break;
     }
   }
