@@ -180,6 +180,7 @@ module.exports = {
                 loader: require.resolve('css-loader'),
                 options: {
                   importLoaders: 1,
+                  localIdentName: '[name]__[local]--[hash:base64:5]'
                 },
               },
               {
@@ -213,7 +214,12 @@ module.exports = {
             test: /\.less$/,
             use: [
               require.resolve('style-loader'),
-              require.resolve('css-loader'),
+              {
+                loader: require.resolve('css-loader'),
+                options: {
+                  localIdentName: '[name]__[local]--[hash:base64:5]'
+                },
+              },
               {
                 loader: require.resolve('postcss-loader'),
                 options: {
