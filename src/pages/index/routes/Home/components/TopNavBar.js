@@ -2,7 +2,7 @@ import React from 'react';
 import {shouldComponentUpdate} from 'lib/decorators';
 import {Drawer, NavBar, Icon} from 'antd-mobile';
 import PropTypes from 'prop-types';
-import './TopNavBar.less';
+import Styles from './TopNavBar.less';
 
 const Fragment = React.Fragment;
 
@@ -37,20 +37,20 @@ export default class TopNavBar extends React.Component {
 
   renderSideBar = () => {
     return (<Fragment>
-      <div className='category-title'><h3>全部分类</h3></div>
-      <div className='category-container'>
-        <ul className='left-ul'>
+      <div className={Styles['category-title']}><h3>全部分类</h3></div>
+      <div className={Styles['category-container']}>
+        <ul className={Styles['left-ul']}>
           {this.props.topNavBar.category.map((item, index) => {
             return (
               <li
-                className={this.state.firstClassIndex === index ? 'item-active' : 'item-closed'}
+                className={this.state.firstClassIndex === index ? Styles['item-active'] : Styles['item-closed']}
                 key={`first-class-${item.id}`}
                 onClick={this.handleFirstClassClick(index)}
               >{item.name}</li>
             )
           })}
         </ul>
-        <div className='right-div'>
+        <div className={Styles['right-div']}>
 
         </div>
       </div>
@@ -66,15 +66,15 @@ export default class TopNavBar extends React.Component {
   render() {
     return (
       <Fragment>
-        <NavBar icon={<Icon type="ellipsis"/>} onLeftClick={this.onOpenChange} className='top-navbar'>
+        <NavBar icon={<Icon type="ellipsis"/>} onLeftClick={this.onOpenChange} className={Styles['top-navbar']}>
           <img
             src={'//gw.alicdn.com/tfs/TB1wQw8qamWBuNjy1XaXXXCbXXa-237-41.png_240x10000.jpg_.webp'}
-            alt={'天猫Tmall'} className='tmall-img'
+            alt={'天猫Tmall'} className={Styles['tmall-img']}
           />
         </NavBar>
-        <div className='drawer-container'>
+        <div className={Styles['drawer-container']}>
           <Drawer
-            className="my-drawer"
+            className={Styles["my-drawer"]}
             style={{minHeight: document.documentElement.clientHeight}}
             // enableDragHandle
             sidebar={this.renderSideBar()}
