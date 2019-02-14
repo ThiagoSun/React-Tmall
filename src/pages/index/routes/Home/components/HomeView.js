@@ -1,10 +1,8 @@
 import React from 'react';
 import './HomeView.less';
 import TopNavBar from '../containers/TopNavBarContainer';
-import { shouldComponentUpdate } from 'lib/decorators';
 
-@shouldComponentUpdate
-export default class HomeView extends React.Component{
+export default class HomeView extends React.PureComponent{
   constructor(props) {
     super(props);
     this.state = {
