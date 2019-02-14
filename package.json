@@ -5,7 +5,7 @@
   "private": true,
   "author": "Sun Mengge",
   "dependencies": {
-    "antd-mobile": "^2.1.8",
+    "antd-mobile": "^2.2.8",
     "immutable": "^3.8.2",
     "less": "^3.0.1",
     "prop-types": "^15.6.1",
