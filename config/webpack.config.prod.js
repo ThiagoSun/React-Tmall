@@ -308,17 +308,31 @@ module.exports = {
     // In production, it will be an empty string unless you specify "homepage"
     // in `package.json`, in which case it will be the pathname of that URL.
     new InterpolateHtmlPlugin(env.raw),
-    // 打包时增加一个runtime包，保存文件之间的对应关系，避免修改业务代码时造成vendor.js的hash变化
-    new webpack.HashedModuleIdsPlugin(),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      filename: 'static/pages/[name].[chunkhash:8].js',
-      minChunks: 4
+    // webpack打包后的模块有moduleId和chunkId，HashedModuleIdsPlugin只是解决了moduleId自增的问题，chunkId自增的问题要这样解决：
+    new webpack.NamedChunksPlugin(chunk => {
+      if (chunk.name) {
+        return chunk.name;
+      }
+      // eslint-disable-next-line no-underscore-dangle
+      return [...chunk._modules]
+        .map(m =>
+          path.relative(
+            m.context,
+            m.userRequest.substring(0, m.userRequest.lastIndexOf("."))
+          )
+        )
+        .join("_");
     }),
+    new webpack.HashedModuleIdsPlugin(),
+    // 打包时增加一个runtime包，保存文件之间的对应关系，避免修改业务代码时造成vendor.js的hash变化
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'runtime',
+      names: ['runtime', 'vendor'].reverse(),
       filename: 'static/pages/[name].[chunkhash:8].js'
     }),
+    // new webpack.optimize.CommonsChunkPlugin({
+    //   name: 'runtime',
+    //   filename: 'static/pages/[name].[chunkhash:8].js'
+    // }),
     // Generates an `index.html` file with the <script> injected.
     // new HtmlWebpackPlugin({
     //   inject: true,
