@@ -77,8 +77,8 @@ module.exports = {
     // Generated JS file names (with nested folders).
     // There will be one main bundle, and one file per asynchronous chunk.
     // We don't currently advertise code splitting but Webpack supports it.
-    filename: 'static/pages/[name]/main.[chunkhash:8].js',
-    chunkFilename: 'static/pages/[name].[chunkhash:8].chunk.js',
+    filename: '[name]/main.[chunkhash:8].js',
+    chunkFilename: '[name].[chunkhash:8].chunk.js',
     // We inferred the "public path" (such as / or /my-project) from homepage.
     publicPath: publicPath,
     // Point sourcemap entries to original disk location (format as URL on Windows)
@@ -333,13 +333,13 @@ module.exports = {
     new webpack.HashedModuleIdsPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendor'],
-      filename: 'static/[name].[chunkhash:8].js',
+      filename: '[name].[chunkhash:8].js',
       minChunks: Infinity
     }),
     // 打包时增加一个runtime包，保存文件之间的对应关系，避免修改业务代码时造成vendor.js的hash变化
     new webpack.optimize.CommonsChunkPlugin({
       names: ['runtime'],
-      filename: 'static/[name].[chunkhash:8].js'
+      filename: '[name].[chunkhash:8].js'
     }),
     // HtmlWebpackPlugin的声明移动到了下面
     // new HtmlWebpackPlugin({
@@ -450,7 +450,7 @@ module.exports = {
         minifyURLs: true,
       },
       template: paths.appHtml,
-      filename: `static/pages/${item.name}/index.html`,
+      filename: `${item.name}/index.html`,
       title: '天猫手机端'
     })
   })),
