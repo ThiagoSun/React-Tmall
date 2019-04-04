@@ -13,6 +13,7 @@ const getClientEnvironment = require('./env');
 const paths = require('./paths');
 const theme = require(paths.appPackageJson).theme;
 const pxtorem = require('postcss-pxtorem');
+const pages = require('./pages');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -23,6 +24,16 @@ const publicPath = '/';
 const publicUrl = '';
 // Get environment variables to inject into our app.
 const env = getClientEnvironment(publicUrl);
+
+// 生成多页面入口
+const pageEntries = {};
+pages.pageArr.forEach((page) => {
+  pageEntries[page.name] = [
+    require.resolve('react-dev-utils/webpackHotDevClient'),
+    require.resolve('./polyfills'),
+    `${paths.appSrc}/pages/${page.name}/index.js`
+  ];
+});
 
 // This is the development configuration.
 // It is focused on developer experience and fast rebuilds.
@@ -50,17 +61,18 @@ module.exports = {
     // We include the app code last so that if there is a runtime error during
     // initialization, it doesn't blow up the WebpackDevServer client, and
     // changing JS code would still trigger a refresh.
-    index: [
-      require.resolve('react-dev-utils/webpackHotDevClient'),
-      // We ship a few polyfills by default:
-      require.resolve('./polyfills'),
-      // Errors should be considered fatal in development
-      // Finally, this is your app's code:
-      paths.appSrc + '/pages/index/index.js'
-      // We include the app code last so that if there is a runtime error during
-      // initialization, it doesn't blow up the WebpackDevServer client, and
-      // changing JS code would still trigger a refresh.
-    ],
+    // index: [
+    //   require.resolve('react-dev-utils/webpackHotDevClient'),
+    //   // We ship a few polyfills by default:
+    //   require.resolve('./polyfills'),
+    //   // Errors should be considered fatal in development
+    //   // Finally, this is your app's code:
+    //   paths.appSrc + '/pages/index/index.js'
+    //   // We include the app code last so that if there is a runtime error during
+    //   // initialization, it doesn't blow up the WebpackDevServer client, and
+    //   // changing JS code would still trigger a refresh.
+    // ],
+    ...pageEntries,
     vendor: ['react', 'react-dom', 'redux', 'react-redux', 'redux-thunk', 'prop-types',
       'react-addons-css-transition-group', 'react-lazyload']
     // antd暂时不要打包进vendor，因为antd已经配置了按需加载
@@ -73,9 +85,9 @@ module.exports = {
     // This does not produce a real file. It's just the virtual path that is
     // served by WebpackDevServer in development. This is the JS bundle
     // containing code from all our entry points, and the Webpack runtime.
-    filename: 'static/pages/[name]/main.bundle.js',
+    filename: '[name]/main.bundle.js',
     // There are also additional JS chunk files if you use code splitting.
-    chunkFilename: 'static/pages/[name].chunk.js',
+    chunkFilename: '[name].chunk.js',
     // This is the URL that app is served from. We use "/" in development.
     publicPath: publicPath,
     // Point sourcemap entries to original disk location (format as URL on Windows)
@@ -284,17 +296,18 @@ module.exports = {
     new InterpolateHtmlPlugin(env.raw),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
-      filename: 'static/pages/[name].js',
-      minChunks: 4
+      filename: '[name].js',
+      minChunks: Infinity
     }),
     // Generates an `index.html` file with the <script> injected.
-    new HtmlWebpackPlugin({
-      inject: true,
-      chunks: ['vendor', 'index'],
-      template: paths.appHtml,
-      filename: 'index.html',
-      title: '天猫手机端'
-    }),
+    // HtmlWebpackPlugin移动到下面
+    // new HtmlWebpackPlugin({
+    //   inject: true,
+    //   chunks: ['vendor', 'index'],
+    //   template: paths.appHtml,
+    //   filename: 'index.html',
+    //   title: '天猫手机端'
+    // }),
     // Add module names to factory functions so they appear in browser profiler.
     new webpack.NamedModulesPlugin(),
     // Makes some environment variables available to the JS code, for example:
@@ -317,7 +330,15 @@ module.exports = {
     // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
     // You can remove this if you don't use Moment.js:
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-  ],
+  ].concat(pages.pageArr.map(item => {
+    return new HtmlWebpackPlugin({
+      inject: true,
+      chunks: ['vendor', item.name],
+      template: paths.appHtml,
+      filename: `${item.name}/index.html`,
+      title: '天猫手机端'
+    })
+  })),
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
   node: {

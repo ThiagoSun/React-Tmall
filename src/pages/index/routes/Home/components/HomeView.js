@@ -22,7 +22,7 @@ export default class HomeView extends React.PureComponent{
   render() {
     return [
       <TopNavBar key={'TopNavBar'} onToggleCallback={this.handleTopNavBarToggle} />,
-      <div style={{height: '10000px', display: this.state.topNavBarOpen ? 'none' : 'block'}} key='test'>index</div>,
+      <div style={{height: '10000px', display: this.state.topNavBarOpen ? 'none' : 'block'}} key='test'>index1</div>,
       <img src={logoImg} alt='' />
     ];
   }
