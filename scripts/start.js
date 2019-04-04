@@ -34,8 +34,15 @@ const createDevServerConfig = require('../config/webpackDevServer.config');
 const useYarn = fs.existsSync(paths.yarnLockFile);
 const isInteractive = process.stdout.isTTY;
 
+const pages = require('../config/pages');
+const requiredFiles = [];
+// 生成多页面入口Index信息
+pages.pageArr.forEach((page) => {
+  requiredFiles.push(paths[page.pathname]);
+});
+
 // Warn and crash if required files are missing
-if (!checkRequiredFiles([paths.appHtml, paths.tmallIndexJs])) {
+if (!checkRequiredFiles([paths.appHtml].concat(requiredFiles))) {
   process.exit(1);
 }
 

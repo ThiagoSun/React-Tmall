@@ -7,7 +7,7 @@ import CounterRoute from './Counter'
     PlainRoute objects to build route definitions.   */
 
 export const createRoutes = (store) => ({
-  path        : '/index',
+  path        : '/index2',
   component   : CoreLayout,
   indexRoute  : Home,
   childRoutes : [

@@ -1,7 +1,11 @@
 {
   "index.css": "static/pages/index/main.d1da0491.css",
-  "index.js": "static/pages/index/main.23def6dc.js",
-  "index/counter.js": "static/pages/index/counter.b9e7985d.chunk.js",
-  "runtime.js": "static/pages/runtime.449029f3.js",
-  "vendor.js": "static/pages/vendor.c2c7e77b.js"
+  "index.js": "static/pages/index/main.0dc86f6b.js",
+  "index/counter.js": "static/pages/index/counter.2f2ea4aa.chunk.js",
+  "index2.css": "static/pages/index2/main.80bab982.css",
+  "index2.js": "static/pages/index2/main.190a0992.js",
+  "index2/counter.js": "static/pages/index2/counter.688a748a.chunk.js",
+  "runtime.js": "static/runtime.4f1c420f.js",
+  "static/media/logo.svg": "static/media/logo.5d5d9eef.svg",
+  "vendor.js": "static/vendor.fdab1470.js"
 }

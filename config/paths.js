@@ -11,6 +11,13 @@ const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 
 const envPublicUrl = process.env.PUBLIC_URL;
 
+const pages = require('./pages');
+const pagePaths = {};
+// 生成多页面入口Index信息
+pages.pageArr.forEach((page) => {
+  pagePaths[page.pathname] = resolveApp(`src/pages/${page.name}/index.js`);
+});
+
 function ensureSlash(path, needsSlash) {
   const hasSlash = path.endsWith('/');
   if (hasSlash && !needsSlash) {
@@ -45,7 +52,6 @@ module.exports = {
   appPublic: resolveApp('public'),
   appHtml: resolveApp('public/index.html'),
   appIndexJs: resolveApp('src/index.js'),
-  tmallIndexJs: resolveApp('src/pages/index/index.js'),
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
   yarnLockFile: resolveApp('yarn.lock'),
@@ -53,4 +59,5 @@ module.exports = {
   appNodeModules: resolveApp('node_modules'),
   publicUrl: getPublicUrl(resolveApp('package.json')),
   servedPath: getServedPath(resolveApp('package.json')),
+  ...pagePaths
 };

@@ -14,6 +14,7 @@ const paths = require('./paths');
 const getClientEnvironment = require('./env');
 const theme = require(paths.appPackageJson).theme;
 const pxtorem = require('postcss-pxtorem');
+const pages = require('./pages');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -48,6 +49,12 @@ const extractTextPluginOptions = shouldUseRelativeAssetPaths
     { publicPath: Array(cssFilename.split('/').length).join('../') }
   : {};
 
+// 生成多页面入口
+const pageEntries = {};
+pages.pageArr.forEach((page) => {
+  pageEntries[page.name] = [require.resolve('./polyfills'), `${paths.appSrc}/pages/${page.name}/index.js`];
+});
+
 // This is the production configuration.
 // It compiles slowly and is focused on producing a fast and minimal bundle.
 // The development configuration is different and lives in a separate file.
@@ -59,7 +66,7 @@ module.exports = {
   devtool: false,
   // In production, we only want to load the polyfills and the app code.
   entry: {
-    index: [require.resolve('./polyfills'), paths.appSrc + '/pages/index/index.js'],
+    ...pageEntries,
     vendor: ['react', 'react-dom', 'redux', 'react-redux', 'redux-thunk', 'prop-types',
       'react-addons-css-transition-group', 'react-lazyload']
     // antd暂时不要打包进vendor，因为antd已经配置了按需加载
@@ -324,19 +331,20 @@ module.exports = {
         .join("_");
     }),
     new webpack.HashedModuleIdsPlugin(),
+    new webpack.optimize.CommonsChunkPlugin({
+      names: ['vendor'],
+      filename: 'static/[name].[chunkhash:8].js',
+      minChunks: Infinity
+    }),
     // 打包时增加一个runtime包，保存文件之间的对应关系，避免修改业务代码时造成vendor.js的hash变化
     new webpack.optimize.CommonsChunkPlugin({
-      names: ['runtime', 'vendor'].reverse(),
-      filename: 'static/pages/[name].[chunkhash:8].js'
+      names: ['runtime'],
+      filename: 'static/[name].[chunkhash:8].js'
     }),
-    // new webpack.optimize.CommonsChunkPlugin({
-    //   name: 'runtime',
-    //   filename: 'static/pages/[name].[chunkhash:8].js'
-    // }),
-    // Generates an `index.html` file with the <script> injected.
+    // HtmlWebpackPlugin的声明移动到了下面
     // new HtmlWebpackPlugin({
     //   inject: true,
-    //   template: paths.appHtml,
+    //   chunks: ['runtime', 'vendor', 'index'],
     //   minify: {
     //     removeComments: true,
     //     collapseWhitespace: true,
@@ -349,26 +357,10 @@ module.exports = {
     //     minifyCSS: true,
     //     minifyURLs: true,
     //   },
+    //   template: paths.appHtml,
+    //   filename: 'index.html',
+    //   title: '天猫手机端'
     // }),
-    new HtmlWebpackPlugin({
-      inject: true,
-      chunks: ['runtime', 'vendor', 'index'],
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeRedundantAttributes: true,
-        useShortDoctype: true,
-        removeEmptyAttributes: true,
-        removeStyleLinkTypeAttributes: true,
-        keepClosingSlash: true,
-        minifyJS: true,
-        minifyCSS: true,
-        minifyURLs: true,
-      },
-      template: paths.appHtml,
-      filename: 'index.html',
-      title: '天猫手机端'
-    }),
     // Makes some environment variables available to the JS code, for example:
     // if (process.env.NODE_ENV === 'production') { ... }. See `./env.js`.
     // It is absolutely essential that NODE_ENV was set to production here.
@@ -428,7 +420,7 @@ module.exports = {
       },
       minify: true,
       // For unknown URLs, fallback to the index page
-      navigateFallback: publicUrl + '/index.html',
+      navigateFallback: publicUrl + '/index/index.html',
       // Ignores URLs starting from /__ (useful for Firebase):
       // https://github.com/facebookincubator/create-react-app/issues/2237#issuecomment-302693219
       navigateFallbackWhitelist: [/^(?!\/__).*/],
@@ -441,7 +433,27 @@ module.exports = {
     // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
     // You can remove this if you don't use Moment.js:
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-  ],
+  ].concat(pages.pageArr.map(item => {
+    return new HtmlWebpackPlugin({
+      inject: true,
+      chunks: ['runtime', 'vendor', item.name],
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true,
+      },
+      template: paths.appHtml,
+      filename: `static/pages/${item.name}/index.html`,
+      title: '天猫手机端'
+    })
+  })),
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
   node: {
