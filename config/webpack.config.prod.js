@@ -14,6 +14,8 @@ const paths = require('./paths');
 const getClientEnvironment = require('./env');
 const theme = require(paths.appPackageJson).theme;
 const pxtorem = require('postcss-pxtorem');
+const pages = require('./pages');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -37,7 +39,7 @@ if (env.stringified['process.env'].NODE_ENV !== '"production"') {
 }
 
 // Note: defined here because it will be used more than once.
-const cssFilename = 'static/pages/[name]/main.[contenthash:8].css';
+const cssFilename = '[name]/main.[contenthash:8].css';
 
 // ExtractTextPlugin expects the build output to be flat.
 // (See https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/27)
@@ -47,6 +49,12 @@ const extractTextPluginOptions = shouldUseRelativeAssetPaths
   ? // Making sure that the publicPath goes back to to build folder.
     { publicPath: Array(cssFilename.split('/').length).join('../') }
   : {};
+
+// 生成多页面入口
+const pageEntries = {};
+pages.pageArr.forEach((page) => {
+  pageEntries[page.name] = [require.resolve('./polyfills'), `${paths.appSrc}/pages/${page.name}/index.js`];
+});
 
 // This is the production configuration.
 // It compiles slowly and is focused on producing a fast and minimal bundle.
@@ -59,9 +67,10 @@ module.exports = {
   devtool: false,
   // In production, we only want to load the polyfills and the app code.
   entry: {
-    index: [require.resolve('./polyfills'), paths.appSrc + '/pages/index/index.js'],
+    ...pageEntries,
     vendor: ['react', 'react-dom', 'redux', 'react-redux', 'redux-thunk', 'prop-types',
       'react-addons-css-transition-group', 'react-lazyload']
+    // antd暂时不要打包进vendor，因为antd已经配置了按需加载
   },
   output: {
     // The build folder.
@@ -69,8 +78,8 @@ module.exports = {
     // Generated JS file names (with nested folders).
     // There will be one main bundle, and one file per asynchronous chunk.
     // We don't currently advertise code splitting but Webpack supports it.
-    filename: 'static/pages/[name]/main.[chunkhash:8].js',
-    chunkFilename: 'static/pages/[name].[chunkhash:8].chunk.js',
+    filename: '[name]/main.[chunkhash:8].js',
+    chunkFilename: '[name].[chunkhash:8].chunk.js',
     // We inferred the "public path" (such as / or /my-project) from homepage.
     publicPath: publicPath,
     // Point sourcemap entries to original disk location (format as URL on Windows)
@@ -307,21 +316,36 @@ module.exports = {
     // In production, it will be an empty string unless you specify "homepage"
     // in `package.json`, in which case it will be the pathname of that URL.
     new InterpolateHtmlPlugin(env.raw),
-    // 打包时增加一个runtime包，保存文件之间的对应关系，避免修改业务代码时造成vendor.js的hash变化
+    // webpack打包后的模块有moduleId和chunkId，HashedModuleIdsPlugin只是解决了moduleId自增的问题，chunkId自增的问题要这样解决：
+    new webpack.NamedChunksPlugin(chunk => {
+      if (chunk.name) {
+        return chunk.name;
+      }
+      // eslint-disable-next-line no-underscore-dangle
+      return [...chunk._modules]
+        .map(m =>
+          path.relative(
+            m.context,
+            m.userRequest.substring(0, m.userRequest.lastIndexOf("."))
+          )
+        )
+        .join("_");
+    }),
     new webpack.HashedModuleIdsPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      filename: 'static/pages/[name].[chunkhash:8].js',
-      minChunks: 4
+      names: ['vendor'],
+      filename: '[name].[chunkhash:8].js',
+      minChunks: Infinity
     }),
+    // 打包时增加一个runtime包，保存文件之间的对应关系，避免修改业务代码时造成vendor.js的hash变化
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'runtime',
-      filename: 'static/pages/[name].[chunkhash:8].js'
+      names: ['runtime'],
+      filename: '[name].[chunkhash:8].js'
     }),
-    // Generates an `index.html` file with the <script> injected.
+    // HtmlWebpackPlugin的声明移动到了下面
     // new HtmlWebpackPlugin({
     //   inject: true,
-    //   template: paths.appHtml,
+    //   chunks: ['runtime', 'vendor', 'index'],
     //   minify: {
     //     removeComments: true,
     //     collapseWhitespace: true,
@@ -334,26 +358,10 @@ module.exports = {
     //     minifyCSS: true,
     //     minifyURLs: true,
     //   },
+    //   template: paths.appHtml,
+    //   filename: 'index.html',
+    //   title: '天猫手机端'
     // }),
-    new HtmlWebpackPlugin({
-      inject: true,
-      chunks: ['runtime', 'vendor', 'index'],
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeRedundantAttributes: true,
-        useShortDoctype: true,
-        removeEmptyAttributes: true,
-        removeStyleLinkTypeAttributes: true,
-        keepClosingSlash: true,
-        minifyJS: true,
-        minifyCSS: true,
-        minifyURLs: true,
-      },
-      template: paths.appHtml,
-      filename: 'index.html',
-      title: '天猫手机端'
-    }),
     // Makes some environment variables available to the JS code, for example:
     // if (process.env.NODE_ENV === 'production') { ... }. See `./env.js`.
     // It is absolutely essential that NODE_ENV was set to production here.
@@ -413,7 +421,7 @@ module.exports = {
       },
       minify: true,
       // For unknown URLs, fallback to the index page
-      navigateFallback: publicUrl + '/index.html',
+      navigateFallback: publicUrl + 'index/index.html',
       // Ignores URLs starting from /__ (useful for Firebase):
       // https://github.com/facebookincubator/create-react-app/issues/2237#issuecomment-302693219
       navigateFallbackWhitelist: [/^(?!\/__).*/],
@@ -426,7 +434,30 @@ module.exports = {
     // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
     // You can remove this if you don't use Moment.js:
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-  ],
+    // new BundleAnalyzerPlugin({
+    //   generateStatsFile: true
+    // })
+  ].concat(pages.pageArr.map(item => {
+    return new HtmlWebpackPlugin({
+      inject: true,
+      chunks: ['runtime', 'vendor', item.name],
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true,
+      },
+      template: paths.appHtml,
+      filename: `${item.name}/index.html`,
+      title: '天猫手机端'
+    })
+  })),
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
   node: {

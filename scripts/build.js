@@ -35,8 +35,15 @@ const useYarn = fs.existsSync(paths.yarnLockFile);
 const WARN_AFTER_BUNDLE_GZIP_SIZE = 512 * 1024;
 const WARN_AFTER_CHUNK_GZIP_SIZE = 1024 * 1024;
 
+const pages = require('../config/pages');
+const requiredFiles = [];
+// 生成多页面入口Index信息
+pages.pageArr.forEach((page) => {
+  requiredFiles.push(paths[page.pathname]);
+});
+
 // Warn and crash if required files are missing
-if (!checkRequiredFiles([paths.appHtml, paths.tmallIndexJs])) {
+if (!checkRequiredFiles([paths.appHtml].concat(requiredFiles))) {
   process.exit(1);
 }
 

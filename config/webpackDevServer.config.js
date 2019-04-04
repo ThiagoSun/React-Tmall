@@ -82,7 +82,8 @@ module.exports = function (proxy, allowedHost) {
       // See https://github.com/facebookincubator/create-react-app/issues/387.
       disableDotRule: true,
       rewrites: [
-        {from: /^\/index.html/, to: '/build/index.html'},
+        {from: /^\/index/, to: '/index/index.html'},
+        {from: /^\/index2/, to: '/index2/index.html'},
       ]
     },
     public: allowedHost,

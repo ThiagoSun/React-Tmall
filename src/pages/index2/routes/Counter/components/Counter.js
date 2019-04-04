@@ -4,7 +4,7 @@ import Styles from './Counter.less';
 
 export const Counter = ({ counter, increment, doubleAsync }) => (
   <div className={Styles.counterContainer}>
-    <h2>Counter: {counter}</h2>
+    <h2>Counter2: {counter}</h2>
     <button className='btn btn-primary' onClick={increment}>
       Increment
     </button>
