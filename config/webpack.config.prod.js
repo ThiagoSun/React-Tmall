@@ -68,8 +68,8 @@ module.exports = {
   // In production, we only want to load the polyfills and the app code.
   entry: {
     ...pageEntries,
-    vendor: ['react', 'react-dom', 'redux', 'react-redux', 'redux-thunk', 'prop-types',
-      'react-addons-css-transition-group', 'react-lazyload']
+    vendor: ['react', 'react-dom', 'redux', 'react-redux', 'redux-thunk', 'prop-types', 'react-router',
+      'react-addons-css-transition-group', 'react-lazyload', 'whatwg-fetch', 'immutable']
     // antd暂时不要打包进vendor，因为antd已经配置了按需加载
   },
   output: {
