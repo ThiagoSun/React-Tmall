@@ -15,6 +15,7 @@ const getClientEnvironment = require('./env');
 const theme = require(paths.appPackageJson).theme;
 const pxtorem = require('postcss-pxtorem');
 const pages = require('./pages');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -433,6 +434,9 @@ module.exports = {
     // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
     // You can remove this if you don't use Moment.js:
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    // new BundleAnalyzerPlugin({
+    //   generateStatsFile: true
+    // })
   ].concat(pages.pageArr.map(item => {
     return new HtmlWebpackPlugin({
       inject: true,
